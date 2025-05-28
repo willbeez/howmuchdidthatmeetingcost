@@ -14,9 +14,19 @@
       border: 1px solid #ccc;
       padding: 1em;
       margin-bottom: 2em;
+      position: relative;
     }
     .block input {
       margin-bottom: 0.5em;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -59,6 +69,7 @@
       const block = document.createElement("div");
       block.className = "block";
       block.innerHTML = `
+        <button class="remove-btn" onclick="removeBlock(this)">❌</button>
         <div>
           <label>Number of people:
             <input class="people" type="number" value="${people}" onchange="calculateAll()">
@@ -80,6 +91,11 @@
       calculateAll();
     }
 
+    function removeBlock(btn) {
+      btn.closest(".block").remove();
+      calculateAll();
+    }
+
     function copyLink() {
       const encoded = Array.from(document.querySelectorAll(".block")).map(block => {
         const p = block.querySelector(".people").value;
@@ -94,7 +110,7 @@
 
     function loadFromHash() {
       const hash = window.location.hash.replace("#", "");
-      if (!hash) return addBlock(); // default single block
+      if (!hash) return addBlock();
       const entries = hash.split("|");
       entries.forEach(entry => {
         const [p, s, m] = entry.split("-").map(Number);
