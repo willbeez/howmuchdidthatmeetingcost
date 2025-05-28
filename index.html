@@ -3,56 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <title>Meeting Cost Calculator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 1000px;
+      margin: auto;
+      padding: 2em;
+    }
+    .block {
+      border: 1px solid #ccc;
+      padding: 1em;
+      margin-bottom: 2em;
+    }
+    .block input {
+      margin-bottom: 0.5em;
+    }
+  </style>
 </head>
-<body style="font-family: sans-serif; max-width: 1000px; margin: auto; padding: 2em;">
+<body>
   <h1 style="text-align: center;">💰 howmuchdidthatmeetingcost.com 💰</h1>
 
-  <div style="margin-bottom: 1em;">
-    <label>Number of people: <input type="number" id="people" value="5" onchange="calculateCost()" /></label>
-  </div>
+  <div id="blocks"></div>
 
-  <div style="margin-bottom: 1em;">
-    <label>Avg annual salary ($): <input type="number" id="salary" value="100000" onchange="calculateCost()" /></label>
-  </div>
-
-  <div style="margin-bottom: 1em;">
-    <label>Duration (minutes): <input type="number" id="minutes" value="60" onchange="calculateCost()" /></label>
-  </div>
-
-  <p style="margin-bottom: 1em;">Total Cost: <strong id="cost">$0.00</strong></p>
+  <button onclick="addBlock()">➕ Add Meeting</button>
+  <p><strong>TOTAL: <span id="total">$0.00</span></strong></p>
   <button onclick="copyLink()">Copy Link with Values</button>
   <p id="linkStatus" style="color: green;"></p>
 
   <script>
-    function calculateCost() {
-      const people = +document.getElementById("people").value;
-      const salary = +document.getElementById("salary").value;
-      const minutes = +document.getElementById("minutes").value;
+    let blockCount = 0;
 
-      const hourlyRate = salary / (52 * 40);
-      const cost = people * hourlyRate * (minutes / 60);
+    function formatMoney(amount) {
+      return amount.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+    }
 
-      document.getElementById("cost").textContent = cost.toLocaleString("en-US", {style: "currency", currency: "USD"});
+    function calculateAll() {
+      let total = 0;
+      document.querySelectorAll('.block').forEach(block => {
+        const people = +block.querySelector('.people').value;
+        const salary = +block.querySelector('.salary').value;
+        const minutes = +block.querySelector('.minutes').value;
+        const hourlyRate = salary / (52 * 40);
+        const cost = people * hourlyRate * (minutes / 60);
+        block.querySelector('.cost').textContent = formatMoney(cost);
+        total += cost;
+      });
+      document.getElementById("total").textContent = formatMoney(total);
+    }
 
+    function addBlock(people = 5, salary = 100000, minutes = 60) {
+      const id = `block-${blockCount++}`;
+      const block = document.createElement("div");
+      block.className = "block";
+      block.innerHTML = `
+        <div>
+          <label>Number of people:
+            <input class="people" type="number" value="${people}" onchange="calculateAll()">
+          </label>
+        </div>
+        <div>
+          <label>Avg annual salary ($):
+            <input class="salary" type="number" value="${salary}" onchange="calculateAll()">
+          </label>
+        </div>
+        <div>
+          <label>Duration (minutes):
+            <input class="minutes" type="number" value="${minutes}" onchange="calculateAll()">
+          </label>
+        </div>
+        <p>Cost: <span class="cost">$0.00</span></p>
+      `;
+      document.getElementById("blocks").appendChild(block);
+      calculateAll();
+    }
+
+    function copyLink() {
+      const encoded = Array.from(document.querySelectorAll(".block")).map(block => {
+        const p = block.querySelector(".people").value;
+        const s = block.querySelector(".salary").value;
+        const m = block.querySelector(".minutes").value;
+        return `${p}-${s}-${m}`;
+      }).join("|");
+      const url = `${location.origin}${location.pathname}#${encoded}`;
+      navigator.clipboard.writeText(url);
+      document.getElementById("linkStatus").textContent = "Link copied!";
     }
 
     function loadFromHash() {
       const hash = window.location.hash.replace("#", "");
-      if (!hash) return;
-      const [people, salary, minutes] = hash.split("-").map(Number);
-      if (!isNaN(people)) document.getElementById("people").value = people;
-      if (!isNaN(salary)) document.getElementById("salary").value = salary;
-      if (!isNaN(minutes)) document.getElementById("minutes").value = minutes;
-      calculateCost();
-    }
-
-    function copyLink() {
-      const p = document.getElementById("people").value;
-      const s = document.getElementById("salary").value;
-      const m = document.getElementById("minutes").value;
-      const url = `${location.origin}${location.pathname}#${p}-${s}-${m}`;
-      navigator.clipboard.writeText(url);
-      document.getElementById("linkStatus").textContent = "Link copied!";
+      if (!hash) return addBlock(); // default single block
+      const entries = hash.split("|");
+      entries.forEach(entry => {
+        const [p, s, m] = entry.split("-").map(Number);
+        if (!isNaN(p) && !isNaN(s) && !isNaN(m)) {
+          addBlock(p, s, m);
+        }
+      });
     }
 
     window.onload = loadFromHash;
