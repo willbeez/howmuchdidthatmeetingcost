@@ -61,7 +61,7 @@
     <div id="blocks"></div>
 
     <div style="text-align: left;">
-      <button onclick="addBlock()">➕ Add Meeting</button>
+      <button onclick="addBlockFromLast()">➕ Add Meeting</button>
     </div>
   </div>
 
@@ -118,6 +118,19 @@
       `;
       document.getElementById("blocks").appendChild(block);
       calculateAll();
+    }
+
+    function addBlockFromLast() {
+      const blocks = document.querySelectorAll('.block');
+      if (blocks.length === 0) {
+        addBlock();
+        return;
+      }
+      const last = blocks[blocks.length - 1];
+      const p = +last.querySelector('.people').value;
+      const s = +last.querySelector('.salary').value;
+      const m = +last.querySelector('.minutes').value;
+      addBlock(p, s, m);
     }
 
     function removeBlock(btn) {
