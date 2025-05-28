@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Meeting Cost Calculator</title>
+</head>
+<body style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 2em;">
+  <h1>💼 Meeting Cost Calculator</h1>
+
+  <label>Number of people: <input type="number" id="people" value="5" onchange="calculateCost()" /></label><br>
+  <label>Avg annual salary ($): <input type="number" id="salary" value="100000" onchange="calculateCost()" /></label><br>
+  <label>Duration (minutes): <input type="number" id="minutes" value="60" onchange="calculateCost()" /></label><br>
+  <p>Total Cost: <strong id="cost">$0.00</strong></p>
+  <button onclick="copyLink()">Copy Link with Values</button>
+  <p id="linkStatus" style="color: green;"></p>
+
+  <script>
+    function calculateCost() {
+      const people = +document.getElementById("people").value;
+      const salary = +document.getElementById("salary").value;
+      const minutes = +document.getElementById("minutes").value;
+
+      const hourlyRate = salary / (52 * 40); // 52 weeks × 40 hrs/week
+      const cost = people * hourlyRate * (minutes / 60);
+
+      document.getElementById("cost").textContent = "$" + cost.toFixed(2);
+    }
+
+    function loadFromHash() {
+      const hash = window.location.hash.replace("#", "");
+      if (!hash) return;
+      const [people, salary, minutes] = hash.split("-").map(Number);
+      if (!isNaN(people)) document.getElementById("people").value = people;
+      if (!isNaN(salary)) document.getElementById("salary").value = salary;
+      if (!isNaN(minutes)) document.getElementById("minutes").value = minutes;
+      calculateCost();
+    }
+
+    function copyLink() {
+      const p = document.getElementById("people").value;
+      const s = document.getElementById("salary").value;
+      const m = document.getElementById("minutes").value;
+      const url = `${location.origin}${location.pathname}#${p}-${s}-${m}`;
+      navigator.clipboard.writeText(url);
+      document.getElementById("linkStatus").textContent = "Link copied!";
+    }
+
+    window.onload = loadFromHash;
+  </script>
+</body>
+</html>
