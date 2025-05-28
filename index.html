@@ -9,12 +9,14 @@
       max-width: 1000px;
       margin: auto;
       padding: 2em;
+      text-align: center;
     }
     .block {
       border: 1px solid #ccc;
       padding: 1em;
       margin-bottom: 2em;
       position: relative;
+      text-align: left;
     }
     .block input {
       margin-bottom: 0.5em;
@@ -28,20 +30,28 @@
       font-size: 20px;
       cursor: pointer;
     }
+    #total {
+      font-size: 3em;
+      font-weight: bold;
+      margin-top: 1em;
+    }
   </style>
 </head>
 <body>
-  <h1 style="text-align: center;">💰 howmuchdidthatmeetingcost.com 💰</h1>
+  <h1>💰 howmuchdidthatmeetingcost.com 💰</h1>
 
   <div id="blocks"></div>
 
-  <button onclick="addBlock()">➕ Add Meeting</button>
-  <p><strong>TOTAL: <span id="total">$0.00</span></strong></p>
-  <button onclick="copyLink()">Copy Link with Values</button>
-  <p id="linkStatus" style="color: green;"></p>
+  <div id="controls">
+    <button onclick="addBlock()">➕ Add Meeting</button><br><br>
+    <button onclick="copyLink()">Copy Link with Values</button>
+    <p id="linkStatus" style="color: green;"></p>
+    <div id="total">$0.00</div>
+  </div>
 
   <script>
     let blockCount = 0;
+    let displayTotalOnly = false;
 
     function formatMoney(amount) {
       return amount.toLocaleString("en-US", {
@@ -65,7 +75,6 @@
     }
 
     function addBlock(people = 5, salary = 100000, minutes = 60) {
-      const id = `block-${blockCount++}`;
       const block = document.createElement("div");
       block.className = "block";
       block.innerHTML = `
@@ -110,17 +119,29 @@
 
     function loadFromHash() {
       const hash = window.location.hash.replace("#", "");
-      if (!hash) return addBlock();
+      if (!hash) return false;
       const entries = hash.split("|");
+      if (entries.length === 0) return false;
       entries.forEach(entry => {
         const [p, s, m] = entry.split("-").map(Number);
         if (!isNaN(p) && !isNaN(s) && !isNaN(m)) {
           addBlock(p, s, m);
         }
       });
+      return true;
     }
 
-    window.onload = loadFromHash;
+    window.onload = () => {
+      displayTotalOnly = loadFromHash();
+      if (!displayTotalOnly) {
+        addBlock();
+      } else {
+        document.getElementById("blocks").style.display = "none";
+        document.getElementById("controls").style.display = "none";
+        document.getElementById("total").style.display = "block";
+      }
+      calculateAll();
+    };
   </script>
 </body>
 </html>
