@@ -32,7 +32,8 @@
       const hourlyRate = salary / (52 * 40);
       const cost = people * hourlyRate * (minutes / 60);
 
-      document.getElementById("cost").textContent = "$" + cost.toFixed(2);
+      document.getElementById("cost").textContent = cost.toLocaleString("en-US", {style: "currency", currency: "USD"});
+
     }
 
     function loadFromHash() {
