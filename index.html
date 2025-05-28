@@ -4,13 +4,22 @@
   <meta charset="UTF-8">
   <title>Meeting Cost Calculator</title>
 </head>
-<body style="font-family: sans-serif; max-width: 1000px; margin: auto; padding: 2em;">
-  <h1>💰 howmuchdidthatmeetingcost.com 💰</h1>
+<body style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 2em;">
+  <h1 style="text-align: center;">💰 howmuchdidthatmeetingcost.com 💰</h1>
 
-  <label>Number of people: <input type="number" id="people" value="5" onchange="calculateCost()" /></label><br>
-  <label>Avg annual salary ($): <input type="number" id="salary" value="100000" onchange="calculateCost()" /></label><br>
-  <label>Duration (minutes): <input type="number" id="minutes" value="60" onchange="calculateCost()" /></label><br>
-  <p>Total Cost: <strong id="cost">$0.00</strong></p>
+  <div style="margin-bottom: 1em;">
+    <label>Number of people: <input type="number" id="people" value="5" onchange="calculateCost()" /></label>
+  </div>
+
+  <div style="margin-bottom: 1em;">
+    <label>Avg annual salary ($): <input type="number" id="salary" value="100000" onchange="calculateCost()" /></label>
+  </div>
+
+  <div style="margin-bottom: 1em;">
+    <label>Duration (minutes): <input type="number" id="minutes" value="60" onchange="calculateCost()" /></label>
+  </div>
+
+  <p style="margin-bottom: 1em;">Total Cost: <strong id="cost">$0.00</strong></p>
   <button onclick="copyLink()">Copy Link with Values</button>
   <p id="linkStatus" style="color: green;"></p>
 
@@ -20,7 +29,7 @@
       const salary = +document.getElementById("salary").value;
       const minutes = +document.getElementById("minutes").value;
 
-      const hourlyRate = salary / (52 * 40); // 52 weeks × 40 hrs/week
+      const hourlyRate = salary / (52 * 40);
       const cost = people * hourlyRate * (minutes / 60);
 
       document.getElementById("cost").textContent = "$" + cost.toFixed(2);
