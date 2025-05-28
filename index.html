@@ -36,11 +36,19 @@
       cursor: pointer;
     }
     #total {
-      font-size: 20vw;
-      font-weight: bold;
       text-align: center;
       margin: 0.5em 0 0.2em 0;
       line-height: 1;
+      width: 100vw;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    #total span {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 10vw;
+      max-width: 100%;
+      transform-origin: left center;
     }
     #linkStatus {
       color: green;
@@ -64,7 +72,7 @@
     </div>
   </div>
 
-  <div id="total">$0.00</div>
+  <div id="total"><span>$0.00</span></div>
 
   <button id="copyLinkBtn" onclick="copyLink()">Copy Link with Values</button>
   <p id="linkStatus"></p>
@@ -79,6 +87,15 @@
       });
     }
 
+    function resizeTotalText() {
+      const span = document.querySelector('#total span');
+      const parent = span.parentElement;
+      span.style.fontSize = '10vw'; // reset to max
+      while (span.offsetWidth > parent.offsetWidth && parseFloat(span.style.fontSize) > 1) {
+        span.style.fontSize = (parseFloat(span.style.fontSize) - 0.5) + 'vw';
+      }
+    }
+
     function calculateAll() {
       let total = 0;
       document.querySelectorAll('.block').forEach(block => {
@@ -90,7 +107,9 @@
         block.querySelector('.cost').textContent = formatMoney(cost);
         total += cost;
       });
-      document.getElementById("total").textContent = formatMoney(total);
+      const totalSpan = document.querySelector("#total span");
+      totalSpan.textContent = formatMoney(total);
+      resizeTotalText();
     }
 
     function addBlock(people = 5, salary = 100000, minutes = 60) {
