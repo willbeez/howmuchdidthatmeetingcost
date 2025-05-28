@@ -42,16 +42,13 @@
 
   <div id="blocks"></div>
 
-  <div id="controls">
-    <button onclick="addBlock()">➕ Add Meeting</button><br><br>
-    <button onclick="copyLink()">Copy Link with Values</button>
-    <p id="linkStatus" style="color: green;"></p>
-    <div id="total">$0.00</div>
-  </div>
+  <button onclick="addBlock()">➕ Add Meeting</button><br><br>
+  <button onclick="copyLink()">Copy Link with Values</button>
+  <p id="linkStatus" style="color: green;"></p>
+  <div id="total">$0.00</div>
 
   <script>
     let blockCount = 0;
-    let displayTotalOnly = false;
 
     function formatMoney(amount) {
       return amount.toLocaleString("en-US", {
@@ -132,13 +129,8 @@
     }
 
     window.onload = () => {
-      displayTotalOnly = loadFromHash();
-      if (!displayTotalOnly) {
+      if (!loadFromHash()) {
         addBlock();
-      } else {
-        document.getElementById("blocks").style.display = "none";
-        document.getElementById("controls").style.display = "none";
-        document.getElementById("total").style.display = "block";
       }
       calculateAll();
     };
