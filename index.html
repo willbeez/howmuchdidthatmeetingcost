@@ -6,6 +6,10 @@
   <style>
     body {
       font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    #main-content {
       max-width: 1000px;
       margin: auto;
       padding: 2em;
@@ -35,7 +39,7 @@
       font-size: 20vw;
       font-weight: bold;
       text-align: center;
-      margin: 1em 0;
+      margin: 0.5em 0 0.2em 0;
       line-height: 1;
     }
     #linkStatus {
@@ -49,12 +53,15 @@
   </style>
 </head>
 <body>
-  <h1>💰 howmuchdidthatmeetingcost.com 💰</h1>
 
-  <div id="blocks"></div>
+  <div id="main-content">
+    <h1>💰 howmuchdidthatmeetingcost.com 💰</h1>
 
-  <div style="text-align: left;">
-    <button onclick="addBlock()">➕ Add Meeting</button>
+    <div id="blocks"></div>
+
+    <div style="text-align: left;">
+      <button onclick="addBlock()">➕ Add Meeting</button>
+    </div>
   </div>
 
   <div id="total">$0.00</div>
