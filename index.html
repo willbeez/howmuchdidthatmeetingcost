@@ -9,6 +9,8 @@
       max-width: 1000px;
       margin: auto;
       padding: 2em;
+    }
+    h1 {
       text-align: center;
     }
     .block {
@@ -16,7 +18,6 @@
       padding: 1em;
       margin-bottom: 2em;
       position: relative;
-      text-align: left;
     }
     .block input {
       margin-bottom: 0.5em;
@@ -31,9 +32,18 @@
       cursor: pointer;
     }
     #total {
-      font-size: 3em;
+      font-size: 6em;
       font-weight: bold;
-      margin-top: 1em;
+      text-align: center;
+      margin: 1em 0;
+    }
+    #linkStatus {
+      color: green;
+      text-align: center;
+    }
+    #copyLinkBtn {
+      display: block;
+      margin: 0 auto;
     }
   </style>
 </head>
@@ -42,10 +52,14 @@
 
   <div id="blocks"></div>
 
-  <button onclick="addBlock()">➕ Add Meeting</button><br><br>
-  <button onclick="copyLink()">Copy Link with Values</button>
-  <p id="linkStatus" style="color: green;"></p>
+  <div style="text-align: left;">
+    <button onclick="addBlock()">➕ Add Meeting</button>
+  </div>
+
   <div id="total">$0.00</div>
+
+  <button id="copyLinkBtn" onclick="copyLink()">Copy Link with Values</button>
+  <p id="linkStatus"></p>
 
   <script>
     let blockCount = 0;
